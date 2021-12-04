@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class SqlMethods {
     Connection connection;
-    //Main m = new Main();
+
 
     public void connect() throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/laboration3", "javaConnect", "password123");
