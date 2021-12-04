@@ -62,29 +62,6 @@ public class SqlMethods {
 
 
 
-    /*
-    DELIMITER $$
-CREATE TRIGGER insert_trigger10
-	BEFORE INSERT ON arti26  FOR EACH ROW
-    BEGIN
-		IF NEW.first_name REGEXP '^[0-9]+$'
-        THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = "Please do not use numbers in the artist name";
-		END IF;
-        	IF NEW.last_name REGEXP '^[0-9]+$'
-        THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = "Please do not use numbers in the artist name";
-		END IF;
-	END;
-$$
-
-
-     */
-
-
-
     public void addNewArtist(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO artist(first_name,last_name,age) VALUES (?,?,?)");
         System.out.println("Write the First name of the artist");
