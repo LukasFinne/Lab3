@@ -12,18 +12,24 @@ public class SqlMethods {
     }
 
     public void createTableAndTrigger() throws SQLException {
-        createTable();
-        createInsertTrigger();
-        createUpdateTrigger();
+        try {
+            createTable();
+            createInsertTrigger();
+            createUpdateTrigger();
+        } catch (SQLSyntaxErrorException e) {
+            System.out.println("The table already exist");
+        }
+
     }
 
     public void createTable() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE artist(first_name VARCHAR(45) NOT NULL ,last_name VARCHAR(45)  NOT NULL ,age smallint UNSIGNED, id smallint AUTO_INCREMENT, PRIMARY KEY (id))");
         preparedStatement.executeUpdate();
     }
+
     public void createInsertTrigger() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                        "CREATE TRIGGER no_numbers_trigger " +
+                "CREATE TRIGGER no_numbers_trigger " +
                         "BEFORE INSERT ON artist  FOR EACH ROW " +
                         "BEGIN " +
                         "IF NEW.first_name REGEXP '^[0-9]+$' " +
@@ -37,9 +43,10 @@ public class SqlMethods {
                         "SET MESSAGE_TEXT = \"Please do not use numbers in the artist name\"; " +
                         "END IF; " +
                         "END; "
-                );
+        );
         preparedStatement.executeUpdate();
     }
+
     public void createUpdateTrigger() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "CREATE TRIGGER no_numbers_trigger_update " +
@@ -61,7 +68,6 @@ public class SqlMethods {
     }
 
 
-
     public void addNewArtist(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO artist(first_name,last_name,age) VALUES (?,?,?)");
         System.out.println("Write the First name of the artist");
@@ -70,10 +76,10 @@ public class SqlMethods {
         preparedStatement.setString(2, sc.next());
         System.out.println("Write the Age of the artist");
         preparedStatement.setString(3, sc.next());
-        try{
+        try {
             preparedStatement.executeUpdate();
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             addNewArtist(sc);
         }
 
@@ -82,11 +88,11 @@ public class SqlMethods {
     public void deleteArtist(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM artist WHERE id = ?");
         System.out.println("Write the id of the artist you want to delete");
-        preparedStatement.setString(1,sc.next());
-        try{
+        preparedStatement.setString(1, sc.next());
+        try {
             preparedStatement.executeUpdate();
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             deleteArtist(sc);
         }
     }
@@ -94,13 +100,11 @@ public class SqlMethods {
     public void updateFirstName(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE artist SET first_name=? WHERE id = ?");
         System.out.println("Write the updated First name!");
-        preparedStatement.setString(1, sc.next());
-        System.out.println("Write the id of the artist you want to update");
-        preparedStatement.setString(2, sc.next());
-        try{
+        updateArtistId(sc, preparedStatement);
+        try {
             preparedStatement.executeUpdate();
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             updateFirstName(sc);
         }
     }
@@ -108,13 +112,11 @@ public class SqlMethods {
     public void updateLastName(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE artist SET last_name=? WHERE id = ?");
         System.out.println("Write the updated Last name!");
-        preparedStatement.setString(1, sc.next());
-        System.out.println("Write the id of the artist you want to update");
-        preparedStatement.setString(2, sc.next());
-        try{
+        updateArtistId(sc, preparedStatement);
+        try {
             preparedStatement.executeUpdate();
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             updateLastName(sc);
         }
     }
@@ -122,16 +124,20 @@ public class SqlMethods {
     public void updateAge(Scanner sc) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE artist SET age =? WHERE id = ?");
         System.out.println("Write the updated Age");
-        preparedStatement.setString(1, sc.next());
-        System.out.println("Write the id of the artist you want to update");
-        preparedStatement.setString(2, sc.next());
-        try{
+        updateArtistId(sc, preparedStatement);
+        try {
             preparedStatement.executeUpdate();
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             updateAge(sc);
         }
 
+    }
+
+    private void updateArtistId(Scanner sc, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, sc.next());
+        System.out.println("Write the id of the artist you want to update");
+        preparedStatement.setString(2, sc.next());
     }
 
     public void showAll() throws SQLException {
@@ -143,10 +149,10 @@ public class SqlMethods {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM artist WHERE id=?");
         System.out.println("Write the id of the artist you want to find");
         preparedStatement.setString(1, sc.next());
-        try{
+        try {
             printColumns(preparedStatement);
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             findById(sc);
         }
 
@@ -157,10 +163,10 @@ public class SqlMethods {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM artist WHERE age=?");
         System.out.println("Write the age of the artist you want to find");
         preparedStatement.setString(1, sc.next());
-        try{
+        try {
             printColumns(preparedStatement);
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             findByAge(sc);
         }
 
@@ -170,10 +176,10 @@ public class SqlMethods {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM artist WHERE CONCAT(first_name,' ', last_name ) LIKE ?");
         System.out.println("Write the name of the artist you want to find");
         preparedStatement.setString(1, "%" + sc.next() + "%");
-        try{
+        try {
             printColumns(preparedStatement);
-        }catch (Exception e){
-            System.out.println("Wrong Input!, Please try again");
+        } catch (Exception e) {
+            System.out.println("Wrong Input!, Please do not use numerics for artist name");
             findByName(sc);
         }
 

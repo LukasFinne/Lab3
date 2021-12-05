@@ -34,7 +34,11 @@ public class Main {
         s.connect();
         do{
             printMenuOption();
-            choice = readChoice(sc);
+                try{
+                    choice = readChoice(sc);
+                }catch (Exception e){
+                    System.out.println("Only numbers please");
+                }
             executeChoice(choice);
         }while(choice != 0);
     }
@@ -61,6 +65,7 @@ public class Main {
         System.out.println("7. Find by Id");
         System.out.println("8. Find by Age");
         System.out.println("9. Find by Name");
+        System.out.println("10. Create the table and triggers for insertion and update");
         System.out.println("0. Exit program");
     }
 
