@@ -32,18 +32,18 @@ public class Main {
     public void run() throws SQLException {
         int choice = 0;
         s.connect();
-        do{
+        do {
             printMenuOption();
-                try{
-                    choice = readChoice(sc);
-                }catch (Exception e){
-                    System.out.println("Only numbers please");
-                }
+            try {
+                choice = readChoice(sc);
+            } catch (Exception e) {
+                System.out.println("Only numbers please");
+            }
             executeChoice(choice);
-        }while(choice != 0);
+        } while (choice != 0);
     }
 
-    private void shutdown(){
+    private void shutdown() {
         System.exit(0);
     }
 
@@ -51,11 +51,11 @@ public class Main {
         commands[choice].execute();
     }
 
-    private int readChoice(Scanner sc){
+    private int readChoice(Scanner sc) {
         return sc.nextInt();
     }
 
-    private void printMenuOption(){
+    private void printMenuOption() {
         System.out.println("1. Show all");
         System.out.println("2. Add new artist");
         System.out.println("3. Delete artist");
